@@ -1,55 +1,62 @@
 package lexical;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PushbackReader;
+import java.io.FileReader;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class LexicalParser {
-    
-    private List<Token> tokens;
     public PushbackReader file;
-    public int count;
 
-    public LexicalParser(String path) throws FileNotFoundException {
-        this.file = new PushbackReader(new FileReader(path));
+    private List<Token> tokens;
+    private SymbolTable st;
+
+    public LexicalParser(String filePath) throws IOException {
+        this.file = new PushbackReader(new FileReader(filePath));
         this.tokens = new ArrayList<Token>();
-        this.count = 0;
-        System.out.println(file.markSupported());
+        this.st = new SymbolTable();
     }
 
     public void run() throws IOException {
         MachineState state = MachineState.INITIAL;
+        int line = 0, column = 0;
         String lexeme = "";
-        int column = 0;
-        int line = 0;
         char ch;
 
-        while ((ch = nextChar()) != (char) -1) {
+        while ((ch = getChar()) != (char) -1) {
             column++;
+
             if (ch == '\n') {
+                column = 0;
                 line++;
             }
 
             switch (state) {
                 case INITIAL:
                     lexeme = "";
+
                     if (Character.isDigit(ch)) {
                         lexeme += ch;
                         state = MachineState.NUMBER;
+
+                    /*
+                    TODO: Verificar posicionamento do caso.
+
                     } else if (Character.isLetter(ch)) {
                         lexeme += ch;
-                        // TODO: VERIFICAR SE É UMA
+
                         state = MachineState.IDENTIFIER;
+                    */
+
                     } else if (ch == '/') {
                         state = MachineState.SLASH;
-                    } else if (ch == '"') {
+
+                    } else if (ch == '\"') {
                         state = MachineState.LITERAL;
-                    }
-                    if (ch == '\'') {
+
+                    }else if (ch == '\'') {
                         state = MachineState.BEGIN_CHAR;
 
                     } else if (ch == '!') {
@@ -82,7 +89,7 @@ public class LexicalParser {
 
                     } else if (ch == '-') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.MINUS));
+                        tokens.add(new Token(lexeme, TokenType.SUB));
 
                     } else if (ch == '*') {
                         lexeme += ch;
@@ -92,6 +99,14 @@ public class LexicalParser {
                         lexeme += ch;
                         tokens.add(new Token(lexeme, TokenType.SEMICOLON));
 
+                    } else if (ch == ':') {
+                        lexeme += ch;
+                        tokens.add(new Token(lexeme, TokenType.COLON));
+
+                    } else if (ch == ',') {
+                        lexeme += ch;
+                        tokens.add(new Token(lexeme, TokenType.COMMA));
+
                     } else if (ch == '(') {
                         lexeme += ch;
                         tokens.add(new Token(lexeme, TokenType.OPEN_BRAC));
@@ -99,66 +114,102 @@ public class LexicalParser {
                     } else if (ch == ')') {
                         lexeme += ch;
                         tokens.add(new Token(lexeme, TokenType.CLOSE_BRAC));
+                    
+                    } else if (ch != '\n' && ch != '\t' && ch != ' ') {
+                        lexeme += ch;
+                        state = MachineState.IDENTIFIER;
                     }
                     break;
+
                 case SLASH:
                     if (ch == '*') {
-                        state = MachineState.CMM_INIT;
+                        state = MachineState.CMM_OPEN;
+
                     } else {
                         tokens.add(new Token(lexeme, TokenType.DIV));
                         state = MachineState.INITIAL;
                     }
                     break;
-                case CMM_INIT:
+                    
+                case CMM_OPEN:
                     if (ch == '*') {
                         state = MachineState.CMM_CLOSE;
                     }
                     break;
+
                 case CMM_CLOSE:
                     if (ch == '/') {
                         state = MachineState.INITIAL;
+
                     } else {
-                        state = MachineState.CMM_INIT;
+                        state = MachineState.CMM_OPEN;
                     }
                     break;
+
                 case LITERAL:
-                    if (ch != '"') {
+                    if (ch != '\"') {
                         lexeme += ch;
+
                     } else {
                         tokens.add(new Token(lexeme, TokenType.LITERAL));
                         state = MachineState.INITIAL;
                     }
                     break;
+
                 case IDENTIFIER:
-                    if (Character.isLetterOrDigit(ch) || ch == '_') {
+                    if (Character.isLetterOrDigit(ch)) {
                         lexeme += ch;
+
                     } else {
+                        TokenType type = this.st.table.get(lexeme);
+
+                        if (type == null) {
+                            tokens.add(new Token(lexeme, TokenType.IDENTIFIER));
+
+                        } else {
+                            tokens.add(new Token(lexeme, type));
+                        }
+
                         ungetChar(ch);
-                        tokens.add(new Token(lexeme, TokenType.IDENTIFIER));
                         state = MachineState.INITIAL;
                     }
                     break;
+
                 case NUMBER:
                     if (ch == '.') {
                         lexeme += ch;
-                        state = MachineState.FLOAT;
+                        state = MachineState.BEGIN_FLOAT;
+
                     } else if (Character.isDigit(ch)) {
                         lexeme += ch;
+
                     } else {
                         tokens.add(new Token(lexeme, TokenType.INTEGER_CONST));
                         ungetChar(ch);
                         state = MachineState.INITIAL;
                     }
                     break;
-                case FLOAT:
+
+                case BEGIN_FLOAT:
                     if (Character.isDigit(ch)) {
                         lexeme += ch;
+                        state = MachineState.END_FLOAT;
+
+                    } else {
+                        throw new LexicalException("CONSTANT FLOAT malformed", line, column);
+                    }
+                    break;
+
+                case END_FLOAT:
+                    if (Character.isDigit(ch)) {
+                        lexeme += ch;
+
                     } else {
                         tokens.add(new Token(lexeme, TokenType.FLOAT_CONST));
                         ungetChar(ch);
                         state = MachineState.INITIAL;
                     }
-                    break;
+
                 case BEGIN_CHAR:
                     lexeme += ch;
                     state = MachineState.END_CHAR;
@@ -171,7 +222,7 @@ public class LexicalParser {
                         state = MachineState.INITIAL;
 
                     } else {
-                        throw new LexicalException(line, column);
+                        throw new LexicalException("CONSTANT CHAR malformed", line, column);
                     }
                     break;
 
@@ -242,7 +293,7 @@ public class LexicalParser {
                         state = MachineState.INITIAL;
 
                     } else {
-                        throw new LexicalException(line, column);
+                        throw new LexicalException("AND operator malformed", line, column);
                     }
                     break;
 
@@ -253,17 +304,17 @@ public class LexicalParser {
                         state = MachineState.INITIAL;
 
                     } else {
-                        throw new LexicalException(line, column);
+                        throw new LexicalException("OR operator malformed", line, column);
                     }
                     break;
 
+                default:
+                    break;
             }
-
         }
-
     }
 
-    private char nextChar() throws IOException {
+    private char getChar() throws IOException {
         return (char) file.read();
     }
 
@@ -271,7 +322,7 @@ public class LexicalParser {
         file.unread((int) ch);
     }
 
-    public void printTable() {
+    public void listTokens() {
         for(Token token: this.tokens) {
             System.out.println(token.toString());
         }

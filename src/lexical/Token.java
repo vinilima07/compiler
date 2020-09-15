@@ -10,7 +10,6 @@ public class Token {
     }
     
     public String toString() {
-        return "lexeme: " + this.lexeme + " --> type: " + this.type.toString();
+        return "[TYPE]: " + this.type.toString() + " [LEXEME]: " + this.lexeme;
     }
 }
-

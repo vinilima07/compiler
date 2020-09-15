@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lexical;
 
-/**
- *
- * @author vinicius
- */
 public class LexicalException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
 
-    public LexicalException(int line, int column) {
-        super("");
-        System.out.println("Lexical exception: " + line + "." + column);
+    public LexicalException(String msg, int line, int column) {
+        super("[ Lexical Exception ] :: " + msg + " " + line + ":" + column);
     }
 }

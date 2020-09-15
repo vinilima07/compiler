@@ -1,17 +1,18 @@
-import java.io.IOException;
 import lexical.LexicalParser;
 
+import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            String path = args[0];
-            LexicalParser parser;
-            parser = new LexicalParser(path);
+            String filePath = args[0];
+            LexicalParser parser = new LexicalParser(filePath);
+
             parser.run();
-            parser.printTable();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            parser.listTokens();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     

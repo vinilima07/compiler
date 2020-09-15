@@ -1,18 +1,18 @@
 package lexical;
 
 public enum TokenType {
-    // SCRIPT
+    // FILE
     INVALID_TOKEN,
     UNEXPECTED_EOF,
     END_OF_FILE,
     
-    // CONTANT
+    // CONSTANT
     LITERAL,
     CHAR_CONST,
     FLOAT_CONST,
     INTEGER_CONST,
     
-    // REL_OP
+    // RELATIONAL OP
     NOT,
     AND,
     OR,
@@ -27,7 +27,7 @@ public enum TokenType {
     MUL,
     DIV,
     ADD,
-    MINUS,
+    SUB,
     LEFT_ARROW,
     RIGHT_ARROW,
     
@@ -43,6 +43,8 @@ public enum TokenType {
     OUT,
     IDENTIFIER,
     SEMICOLON,
+    COLON,
+    COMMA,
     OPEN_BRAC,
     CLOSE_BRAC,
     ASSIGN,
@@ -55,6 +57,5 @@ public enum TokenType {
     // TYPE
     INT,
     CHAR,
-    FLOAT,
-
+    FLOAT
 }

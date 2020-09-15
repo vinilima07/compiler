@@ -3,7 +3,7 @@ package lexical;
 import java.util.HashMap;
 
 public class SymbolTable {
-    HashMap<String, TokenType> table;
+    public HashMap<String, TokenType> table;
 
     public SymbolTable() {
         table = new HashMap<String, TokenType>();
@@ -36,11 +36,10 @@ public class SymbolTable {
         table.put("<=", TokenType.LESS_EQ);
         table.put("!=", TokenType.DIFF);
         table.put("+", TokenType.ADD);
-        table.put("-", TokenType.MINUS);
+        table.put("-", TokenType.SUB);
         table.put("*", TokenType.MUL);
         table.put("/", TokenType.DIV);
         table.put("||", TokenType.OR);
         table.put("&&", TokenType.AND);
     }
-    
 }

@@ -6,16 +6,17 @@ public enum MachineState {
     LITERAL,
     SLASH,
     DQUOTES,
-    CMM_INIT,
+    CMM_OPEN,
     CMM_CLOSE,
     IDENTIFIER,
-    FLOAT,
+    BEGIN_FLOAT,
+    END_FLOAT,
     BEGIN_CHAR,
+    END_CHAR,
     EXCLAMATION,
     EQUAL,
     LESS,
     GREATER,
     AND,
-    OR,
-    END_CHAR
+    OR
 }
