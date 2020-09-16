@@ -13,26 +13,30 @@ public class LexicalParser {
     private List<Token> tokens;
     private SymbolTable st;
 
+    private int line, column;
+
     public LexicalParser(String filePath) throws IOException {
         this.file = new PushbackReader(new FileReader(filePath));
         this.tokens = new ArrayList<Token>();
         this.st = new SymbolTable();
+        this.column = 0;
+        this.line = 1;
     }
 
     public void run() throws IOException {
         MachineState state = MachineState.INITIAL;
-        int line = 0, column = 0;
         String lexeme = "";
         char ch;
 
         while ((ch = getChar()) != (char) -1) {
-            column++;
-
             if (ch == '\n') {
-                column = 0;
-                line++;
+                this.column = 0;
+                this.line ++;
+            
+            } else {
+                this.column += ch == '\t' ? 4 : 1;
             }
-
+                        
             switch (state) {
                 case INITIAL:
                     lexeme = "";
@@ -41,14 +45,9 @@ public class LexicalParser {
                         lexeme += ch;
                         state = MachineState.NUMBER;
 
-                    /*
-                    TODO: Verificar posicionamento do caso.
-
                     } else if (Character.isLetter(ch)) {
                         lexeme += ch;
-
                         state = MachineState.IDENTIFIER;
-                    */
 
                     } else if (ch == '/') {
                         state = MachineState.SLASH;
@@ -114,10 +113,6 @@ public class LexicalParser {
                     } else if (ch == ')') {
                         lexeme += ch;
                         tokens.add(new Token(lexeme, TokenType.CLOSE_BRAC));
-                    
-                    } else if (ch != '\n' && ch != '\t' && ch != ' ') {
-                        lexeme += ch;
-                        state = MachineState.IDENTIFIER;
                     }
                     break;
 
@@ -157,7 +152,7 @@ public class LexicalParser {
                     break;
 
                 case IDENTIFIER:
-                    if (Character.isLetterOrDigit(ch)) {
+                    if (Character.isLetterOrDigit(ch) || ch == '_') {
                         lexeme += ch;
 
                     } else {
@@ -319,7 +314,16 @@ public class LexicalParser {
     }
 
     private void ungetChar(char ch) throws IOException {
-        file.unread((int) ch);
+        if (ch != '\n') {
+            if (ch != '\t') {
+                file.unread((int) ch);
+                this.column -= 1;
+
+            } else {
+                this.column -= 4;
+            }
+        
+        }
     }
 
     public void listTokens() {
