@@ -7,6 +7,12 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/***
+ * Parser do analisador léxico, contem como atributo, o arquivo a ser analisado,
+ * a lista de tokens encontrados, assim como a tabela de simbolos utilizada para
+ * conferência de tokens.
+ * 
+ */
 public class LexicalParser {
     public PushbackReader file;
 
@@ -23,6 +29,11 @@ public class LexicalParser {
         this.line = 1;
     }
 
+    /***
+     * Executa a máquina de estados para o arquivo da instancia formando a lista
+     * de tokens encontrados.
+     * 
+     */
     public void run() throws IOException {
         MachineState state = MachineState.INITIAL;
         String lexeme = "";
@@ -309,10 +320,21 @@ public class LexicalParser {
         }
     }
 
+    /***
+     * Captura o próximo caractere do arquivo.
+     * @return
+     * @throws IOException 
+     */
     private char getChar() throws IOException {
         return (char) file.read();
     }
 
+    /***
+     * Reseta a avaliação de um determinado caractere para que este seja
+     * reavaliado na máquina de estados.
+     * @param ch
+     * @throws IOException 
+     */
     private void ungetChar(char ch) throws IOException {
         if (ch != '\n') {
             if (ch != '\t') {

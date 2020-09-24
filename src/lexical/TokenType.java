@@ -1,5 +1,9 @@
 package lexical;
 
+/***
+ * Estrutura de dados que representa os tipos de tokens.
+ * 
+ */
 public enum TokenType {
     // FILE
     INVALID_TOKEN,

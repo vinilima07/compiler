@@ -2,6 +2,11 @@ package lexical;
 
 import java.util.HashMap;
 
+/***
+ * Classe para armazenar a tabela de simbolos que posteriormente sera 
+ * utilizada para conferir os tokens da linguagem.
+ * 
+ */
 public class SymbolTable {
     public HashMap<String, TokenType> table;
 

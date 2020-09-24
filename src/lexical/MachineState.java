@@ -1,5 +1,10 @@
 package lexical;
 
+/***
+ * Estrutura de dados que representa os estados da maquina de 
+ * estados identificadora de tokens e formadora de lexemas.
+ * 
+ */
 public enum MachineState {
     INITIAL,
     NUMBER,
