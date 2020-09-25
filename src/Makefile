@@ -1,5 +1,5 @@
 ALL:
-	rm -f Main.class
+	find ../ -name "*.class" -type f -delete
 	javac Main.java
 	java Main ../test/test$(TEST).s
 

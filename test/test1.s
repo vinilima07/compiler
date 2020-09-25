@@ -4,7 +4,7 @@ programa teste1 is
     a,x : float
 begin
     a = 12a;
-    x = 12.;
+    x = 12;
     in << a;
     in << b;
     in << c

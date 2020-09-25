@@ -13,6 +13,7 @@ public class Token {
     public Token(String lexeme, TokenType type) {
         this.lexeme = lexeme;
         this.type = type;
+        System.out.println(this.toString());
     }
     
     public String toString() {
