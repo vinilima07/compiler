@@ -66,7 +66,7 @@ public class LexicalParser {
                     } else if (ch == '\"') {
                         state = MachineState.LITERAL;
 
-                    }else if (ch == '\'') {
+                    } else if (ch == '\'') {
                         state = MachineState.BEGIN_CHAR;
 
                     } else if (ch == '!') {
@@ -215,7 +215,8 @@ public class LexicalParser {
                         ungetChar(ch);
                         state = MachineState.INITIAL;
                     }
-
+                    break;
+                    
                 case BEGIN_CHAR:
                     lexeme += ch;
                     state = MachineState.END_CHAR;
