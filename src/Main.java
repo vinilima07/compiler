@@ -1,5 +1,5 @@
 import lexical.LexicalParser;
-
+import syntactic.SyntacticParser;
 import java.io.IOException;
 
 
@@ -19,9 +19,15 @@ public class Main {
     public static void main(String[] args) {
         try {
             String filePath = args[0];
-            LexicalParser parser = new LexicalParser(filePath);
-            parser.run();
-            parser.listTokens();
+            
+            LexicalParser lp = new LexicalParser(filePath);
+            lp.run();
+            
+            SyntacticParser sp = new SyntacticParser(lp.getTokens());
+            
+            
+            
+            
         } catch (IOException e) {
             e.printStackTrace();
         }

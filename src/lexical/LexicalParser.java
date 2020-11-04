@@ -348,6 +348,14 @@ public class LexicalParser {
         
         }
     }
+    
+    /**
+     * Retorna a lista de tokens processados pelo analisador léxico
+     * @return 
+     */
+    public List<Token> getTokens() {
+        return this.tokens;
+    }
 
     public void listTokens() {
         for(Token token: this.tokens) {
