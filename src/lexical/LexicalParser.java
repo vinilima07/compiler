@@ -119,11 +119,11 @@ public class LexicalParser {
 
                     } else if (ch == '(') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.OPEN_BRAC));
+                        tokens.add(new Token(lexeme, TokenType.OPEN_PAR));
 
                     } else if (ch == ')') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.CLOSE_BRAC));
+                        tokens.add(new Token(lexeme, TokenType.CLOSE_PAR));
                     }
                     break;
 
@@ -357,6 +357,7 @@ public class LexicalParser {
         return this.tokens;
     }
 
+    
     public void listTokens() {
         for(Token token: this.tokens) {
             System.out.println(token.toString());
