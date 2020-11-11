@@ -32,8 +32,8 @@ public class SymbolTable {
         table.put("out", TokenType.OUT);
         table.put("<<", TokenType.LEFT_ARROW);
         table.put(">>", TokenType.RIGHT_ARROW);
-        table.put("(", TokenType.OPEN_BRAC);
-        table.put(")", TokenType.CLOSE_BRAC);
+        table.put("(", TokenType.OPEN_PAR);
+        table.put(")", TokenType.CLOSE_PAR);
         table.put("==", TokenType.EQUAL);
         table.put(">", TokenType.GREATER);
         table.put(">=", TokenType.GREATER_EQ);
