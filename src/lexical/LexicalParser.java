@@ -36,10 +36,15 @@ public class LexicalParser {
      */
     public void run() throws IOException {
         MachineState state = MachineState.INITIAL;
+        boolean flagToEnd = false;
         String lexeme = "";
         char ch;
 
-        while ((ch = getChar()) != (char) -1) {
+        while (true) {
+            ch = getChar();
+            
+            if (ch == (char)-1) flagToEnd = true;
+            
             if (ch == '\n') {
                 this.column = 0;
                 this.line ++;
@@ -134,6 +139,7 @@ public class LexicalParser {
                     } else {
                         tokens.add(new Token(line, column, lexeme, TokenType.DIV));
                         state = MachineState.INITIAL;
+                        ungetChar(ch);
                     }
                     break;
                     
@@ -318,7 +324,11 @@ public class LexicalParser {
                 default:
                     break;
             }
+            
+            if (flagToEnd) break;
         }
+        
+        
     }
 
     /***

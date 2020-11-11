@@ -28,6 +28,9 @@ public class SyntacticParser {
      * Avança o indexador do tokens
      */
     void advance() {
+        if (index+1 >= tokens.size() && tokens.get(index).type != TokenType.END) {
+            error();
+        }
         this.index++;
     }
 
@@ -38,9 +41,9 @@ public class SyntacticParser {
      * @param type
      */
     void eat(TokenType type) {
-        if (type != tokens.get(index).type) {
+        if (type != tokens.get(index).type ) {
             error();
-        }
+        } 
         advance();
     }
 
@@ -48,6 +51,7 @@ public class SyntacticParser {
      * TODO: implement
      */
     void error() {
+        for (Token t: tokens.subList(0, index)) System.out.println(t.toString());
         throw new SyntacticException("Unexpected token", tokens.get(index));
     }
     
