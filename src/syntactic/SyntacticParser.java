@@ -5,7 +5,6 @@
  */
 package syntactic;
 
-import java.util.Arrays;
 import java.util.List;
 import lexical.Token;
 import lexical.TokenType;
@@ -39,18 +38,24 @@ public class SyntacticParser {
      * @param type
      */
     void eat(TokenType type) {
-        if (type == tokens.get(index).type) {
-            advance();
-        } else {
+        if (type != tokens.get(index).type) {
             error();
         }
+        advance();
     }
 
     /**
      * TODO: implement
      */
     void error() {
-        errors.add(new SyntacticException("Unexpected token", tokens.get(index)));
+        throw new SyntacticException("Unexpected token", tokens.get(index));
+    }
+    
+    /**
+     * 
+     */
+    public void run(){
+        program();
     }
 
     /**
@@ -97,11 +102,11 @@ public class SyntacticParser {
     }
     
     /**
-     * assign-stmt ::= identifier "=" simple_expr
+     * assign-stmt ::= identifier "=" simple-expr
      */
     void assignStmt() {
         eat(TokenType.IDENTIFIER);
-        eat(TokenType.EQUAL);
+        eat(TokenType.ASSIGN);
         simpleExpr();
     }
     
@@ -384,12 +389,12 @@ public class SyntacticParser {
      * term-esc ::= mulop factor-a term-esc | λ
      */
     void termEsc() {
-        mulOp();
-        factorA();
         switch(tokens.get(index).type) {
             case MUL:
             case DIV:
             case AND:
+                mulOp();
+                factorA();
                 termEsc();
                 break;
         }
@@ -410,6 +415,8 @@ public class SyntacticParser {
                 break;
             case OPEN_PAR:
                 eat(TokenType.OPEN_PAR);
+                expression();
+                eat(TokenType.CLOSE_PAR);
                 break;
             default:
                 error();

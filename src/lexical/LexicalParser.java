@@ -95,35 +95,35 @@ public class LexicalParser {
 
                     } else if (ch == '+') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.ADD));
+                        tokens.add(new Token(line, column, lexeme, TokenType.ADD));
 
                     } else if (ch == '-') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.SUB));
+                        tokens.add(new Token(line, column, lexeme, TokenType.SUB));
 
                     } else if (ch == '*') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.MUL));
+                        tokens.add(new Token(line, column, lexeme, TokenType.MUL));
 
                     } else if (ch == ';') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.SEMICOLON));
+                        tokens.add(new Token(line, column, lexeme, TokenType.SEMICOLON));
 
                     } else if (ch == ':') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.COLON));
+                        tokens.add(new Token(line, column, lexeme, TokenType.COLON));
 
                     } else if (ch == ',') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.COMMA));
+                        tokens.add(new Token(line, column, lexeme, TokenType.COMMA));
 
                     } else if (ch == '(') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.OPEN_PAR));
+                        tokens.add(new Token(line, column, lexeme, TokenType.OPEN_PAR));
 
                     } else if (ch == ')') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.CLOSE_PAR));
+                        tokens.add(new Token(line, column, lexeme, TokenType.CLOSE_PAR));
                     }
                     break;
 
@@ -132,7 +132,7 @@ public class LexicalParser {
                         state = MachineState.CMM_OPEN;
 
                     } else {
-                        tokens.add(new Token(lexeme, TokenType.DIV));
+                        tokens.add(new Token(line, column, lexeme, TokenType.DIV));
                         state = MachineState.INITIAL;
                     }
                     break;
@@ -157,7 +157,7 @@ public class LexicalParser {
                         lexeme += ch;
 
                     } else {
-                        tokens.add(new Token(lexeme, TokenType.LITERAL));
+                        tokens.add(new Token(line, column, lexeme, TokenType.LITERAL));
                         state = MachineState.INITIAL;
                     }
                     break;
@@ -170,10 +170,10 @@ public class LexicalParser {
                         TokenType type = this.st.table.get(lexeme);
 
                         if (type == null) {
-                            tokens.add(new Token(lexeme, TokenType.IDENTIFIER));
+                            tokens.add(new Token(line, column, lexeme, TokenType.IDENTIFIER));
 
                         } else {
-                            tokens.add(new Token(lexeme, type));
+                            tokens.add(new Token(line, column, lexeme, type));
                         }
 
                         ungetChar(ch);
@@ -190,7 +190,7 @@ public class LexicalParser {
                         lexeme += ch;
 
                     } else {
-                        tokens.add(new Token(lexeme, TokenType.INTEGER_CONST));
+                        tokens.add(new Token(line, column, lexeme, TokenType.INTEGER_CONST));
                         ungetChar(ch);
                         state = MachineState.INITIAL;
                     }
@@ -211,7 +211,7 @@ public class LexicalParser {
                         lexeme += ch;
 
                     } else {
-                        tokens.add(new Token(lexeme, TokenType.FLOAT_CONST));
+                        tokens.add(new Token(line, column, lexeme, TokenType.FLOAT_CONST));
                         ungetChar(ch);
                         state = MachineState.INITIAL;
                     }
@@ -225,7 +225,7 @@ public class LexicalParser {
 
                 case END_CHAR:
                     if (ch == '\'') {
-                        tokens.add(new Token(lexeme, TokenType.CHAR_CONST));
+                        tokens.add(new Token(line, column, lexeme, TokenType.CHAR_CONST));
                         state = MachineState.INITIAL;
 
                     } else {
@@ -236,10 +236,10 @@ public class LexicalParser {
                 case EXCLAMATION:
                     if (ch == '=') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.DIFF));
+                        tokens.add(new Token(line, column, lexeme, TokenType.DIFF));
 
                     } else {
-                        tokens.add(new Token(lexeme, TokenType.NOT));
+                        tokens.add(new Token(line, column, lexeme, TokenType.NOT));
                         ungetChar(ch);
                     }
 
@@ -249,10 +249,10 @@ public class LexicalParser {
                 case EQUAL:
                     if (ch == '=') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.EQUAL));
+                        tokens.add(new Token(line, column, lexeme, TokenType.EQUAL));
 
                     } else {
-                        tokens.add(new Token(lexeme, TokenType.ASSIGN));
+                        tokens.add(new Token(line, column, lexeme, TokenType.ASSIGN));
                         ungetChar(ch);
                     }
 
@@ -262,14 +262,14 @@ public class LexicalParser {
                 case LESS:
                     if (ch == '=') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.LESS_EQ));
+                        tokens.add(new Token(line, column, lexeme, TokenType.LESS_EQ));
 
                     } else if (ch == '<') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.LEFT_ARROW));
+                        tokens.add(new Token(line, column, lexeme, TokenType.LEFT_ARROW));
 
                     } else {
-                        tokens.add(new Token(lexeme, TokenType.LESS));
+                        tokens.add(new Token(line, column, lexeme, TokenType.LESS));
                         ungetChar(ch);
                     }
 
@@ -279,14 +279,14 @@ public class LexicalParser {
                 case GREATER:
                     if (ch == '=') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.GREATER_EQ));
+                        tokens.add(new Token(line, column, lexeme, TokenType.GREATER_EQ));
 
                     } else if (ch == '>') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.RIGHT_ARROW));
+                        tokens.add(new Token(line, column, lexeme, TokenType.RIGHT_ARROW));
 
                     } else {
-                        tokens.add(new Token(lexeme, TokenType.GREATER));
+                        tokens.add(new Token(line, column, lexeme, TokenType.GREATER));
                         ungetChar(ch);
                     }
 
@@ -296,7 +296,7 @@ public class LexicalParser {
                 case AND:
                     if (ch == '&') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.AND));
+                        tokens.add(new Token(line, column, lexeme, TokenType.AND));
                         state = MachineState.INITIAL;
 
                     } else {
@@ -307,7 +307,7 @@ public class LexicalParser {
                 case OR:
                     if (ch == '|') {
                         lexeme += ch;
-                        tokens.add(new Token(lexeme, TokenType.OR));
+                        tokens.add(new Token(line, column, lexeme, TokenType.OR));
                         state = MachineState.INITIAL;
 
                     } else {

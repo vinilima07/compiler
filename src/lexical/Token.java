@@ -9,14 +9,19 @@ package lexical;
 public class Token {
     public String lexeme;
     public TokenType type;
+    public int line;
+    public int column;
 
-    public Token(String lexeme, TokenType type) {
+    public Token(int line, int column, String lexeme, TokenType type) {
+        this.line = line;
+        this.column = column;
         this.lexeme = lexeme;
         this.type = type;
-        System.out.println(this.toString());
     }
     
     public String toString() {
-        return "[TYPE]: " + this.type.toString() + " [LEXEME]: " + this.lexeme;
+        return "[TYPE]: " + this.type.toString() +
+               " [LEXEME]: " + this.lexeme + 
+               " [POS] l:" + line + " c:" + column;
     }
 }

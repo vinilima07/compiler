@@ -24,9 +24,7 @@ public class Main {
             lp.run();
             
             SyntacticParser sp = new SyntacticParser(lp.getTokens());
-            
-            
-            
+            sp.run();
             
         } catch (IOException e) {
             e.printStackTrace();
