@@ -364,17 +364,16 @@ public class SyntacticParser {
     }
     
     /**
-     * expression-pref ::= simple-expr relop simple-expr | λ
+     * expression-pref ::= relop simple-expr | λ
      */
     void expressionPref() {
         switch(tokens.get(index).type) {
-            case OPEN_PAR:
-            case SUB:
-            case NOT:
-            case INTEGER_CONST:
-            case FLOAT_CONST:
-            case CHAR_CONST:
-                simpleExpr();
+            case EQUAL:
+            case GREATER:
+            case GREATER_EQ:
+            case LESS:
+            case LESS_EQ:
+            case DIFF:
                 relop();
                 simpleExpr();
                 break;

@@ -1,8 +1,8 @@
-program is
+program test_3 is
 declare
     a, aux: int;
-    b: float;
-begin
+    b: float
+init
     b = 0;
     in <<a;
     in<<b;
