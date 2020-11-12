@@ -198,14 +198,16 @@ public class SyntacticParser {
     void ifStmtPref() {
         switch(tokens.get(index).type) {
             case END:
-                eat(TokenType.END); break;
-            case FLOAT:
+                eat(TokenType.END); 
+                break;
+            case ELSE:
                 eat(TokenType.ELSE);
                 stmtList();
                 eat(TokenType.END);
                 break;
             default:
-                error(); break;
+                error(); 
+                break;
         }
     }
 
