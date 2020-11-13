@@ -59,7 +59,9 @@ public class SyntacticParser {
      * 
      */
     public void run(){
+        System.out.println("\nExecutando Analisador Sintatico...");
         program();
+        System.out.println("Análise Sintatica finalizada sem erros\n");
     }
 
     /**

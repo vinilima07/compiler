@@ -35,6 +35,8 @@ public class LexicalParser {
      * 
      */
     public void run() throws IOException {
+        System.out.println("\nExecutando Analisador Léxico...");
+        
         MachineState state = MachineState.INITIAL;
         boolean flagToEnd = false;
         String lexeme = "";
@@ -328,7 +330,7 @@ public class LexicalParser {
             if (flagToEnd) break;
         }
         
-        
+        System.out.println("Análise Lexica finalizada sem erros\n");
     }
 
     /***
