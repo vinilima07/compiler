@@ -16,10 +16,10 @@ import java.util.List;
 public class LexicalParser {
     public PushbackReader file;
 
-    private List<Token> tokens;
-    private SymbolTable st;
+    public List<Token> tokens;
+    public SymbolTable st;
 
-    private int line, column;
+    public int line, column;
 
     public LexicalParser(String filePath) throws IOException {
         this.file = new PushbackReader(new FileReader(filePath));
@@ -338,7 +338,7 @@ public class LexicalParser {
      * @return
      * @throws IOException 
      */
-    private char getChar() throws IOException {
+    public char getChar() throws IOException {
         return (char) file.read();
     }
 
@@ -348,7 +348,7 @@ public class LexicalParser {
      * @param ch
      * @throws IOException 
      */
-    private void ungetChar(char ch) throws IOException {
+    public void ungetChar(char ch) throws IOException {
         if (ch != '\n') {
             if (ch != '\t') {
                 file.unread((int) ch);

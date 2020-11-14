@@ -10,14 +10,16 @@ import lexical.Token;
 import lexical.TokenType;
 
 /**
+ * Parser do analisador sintatico, recebe a lista de tokens do analisado
+ * lexico (pela main) e executa a analise
  * @author gustavo zille
  * @author vinicius franca
  */
 public class SyntacticParser {
 
-    private List<Token> tokens;
-    private List<SyntacticException> errors;
-    private int index;
+    public List<Token> tokens;
+    public List<SyntacticException> errors;
+    public int index;
 
     public SyntacticParser(List<Token> tokens) {
         this.tokens = tokens;
@@ -27,7 +29,7 @@ public class SyntacticParser {
     /**
      * Avança o indexador do tokens
      */
-    void advance() {
+    public void advance() {
         if (index+1 >= tokens.size() && tokens.get(index).type != TokenType.END) {
             error();
         }
@@ -40,7 +42,7 @@ public class SyntacticParser {
      *
      * @param type
      */
-    void eat(TokenType type) {
+    public void eat(TokenType type) {
         if (type != tokens.get(index).type ) {
             error();
         } 
@@ -48,15 +50,15 @@ public class SyntacticParser {
     }
 
     /**
-     * TODO: implement
+     * Emite um erro semantico
      */
-    void error() {
+    public void error() {
         for (Token t: tokens.subList(0, index)) System.out.println(t.toString());
         throw new SyntacticException("Unexpected token", tokens.get(index));
     }
     
     /**
-     * 
+     * Inicia o parser sintatico
      */
     public void run(){
         System.out.println("\nExecutando Analisador Sintatico...");
@@ -67,7 +69,7 @@ public class SyntacticParser {
     /**
      * program ::= program identifier is body
      */
-    void program() {
+    public void program() {
         eat(TokenType.PROGRAM);
         eat(TokenType.IDENTIFIER);
         eat(TokenType.IS);
@@ -77,7 +79,7 @@ public class SyntacticParser {
     /**
      * decl-list ::= decl {";" decl}
      */
-    void declList() {
+    public void declList() {
         decl();
         while (tokens.get(index).type == TokenType.SEMICOLON) {
             eat(TokenType.SEMICOLON);
@@ -88,7 +90,7 @@ public class SyntacticParser {
     /**
      * ident-list ::= identifier {"," identifier}
      */
-    void identList() {
+    public void identList() {
         eat(TokenType.IDENTIFIER);
         while (tokens.get(index).type == TokenType.COMMA) {
             eat(TokenType.COMMA);
@@ -99,7 +101,7 @@ public class SyntacticParser {
     /**
      * stmt-list ::= stmt {";" stmt}
      */
-    void stmtList() {
+    public void stmtList() {
         stmt();
         while (tokens.get(index).type == TokenType.SEMICOLON) {
             eat(TokenType.SEMICOLON);
@@ -110,7 +112,7 @@ public class SyntacticParser {
     /**
      * assign-stmt ::= identifier "=" simple-expr
      */
-    void assignStmt() {
+    public void assignStmt() {
         eat(TokenType.IDENTIFIER);
         eat(TokenType.ASSIGN);
         simpleExpr();
@@ -119,14 +121,14 @@ public class SyntacticParser {
     /**
      * condition ::= expression
      */
-    void condition() {
+    public void condition() {
         expression();
     }
     
     /**
      * body ::= [declare decl-list] init stmt-list end
      */
-    void body() {
+    public void body() {
         if(tokens.get(index).type == TokenType.DECLARE) {
             advance();
             declList();
@@ -139,7 +141,7 @@ public class SyntacticParser {
     /**
      * decl ::= ident-list : type
      */
-    void decl() {
+    public void decl() {
         identList();
         eat(TokenType.COLON);
         type();
@@ -148,7 +150,7 @@ public class SyntacticParser {
     /**
      * type ::= int | float | char
      */
-    void type() {
+    public void type() {
         switch(tokens.get(index).type) {
             case INT:
                 eat(TokenType.INT); break;
@@ -164,7 +166,7 @@ public class SyntacticParser {
     /**
      * stmt ::= assign-stmt | if-stmt | while-stmt | repeat-stmt | read-stmt | write-stmt
      */
-    void stmt() {
+    public void stmt() {
         switch(tokens.get(index).type) {
             case IDENTIFIER:
                 assignStmt(); break;
@@ -186,7 +188,7 @@ public class SyntacticParser {
     /**
      * if-stmt ::= if condition then stmt-list if-stmt-pref
      */
-    void ifStmt() {
+    public void ifStmt() {
         eat(TokenType.IF);
         condition();
         eat(TokenType.THEN);
@@ -197,7 +199,7 @@ public class SyntacticParser {
     /**
      * if-stmt-pref ::= end | else stmt-list end
      */
-    void ifStmtPref() {
+    public void ifStmtPref() {
         switch(tokens.get(index).type) {
             case END:
                 eat(TokenType.END); 
@@ -216,7 +218,7 @@ public class SyntacticParser {
     /**
      * repeat-stmt ::= repeat stmt-list stmt-suffix
      */
-    void repeatStmt() {
+    public void repeatStmt() {
         eat(TokenType.REPEAT);
         stmtList();
         stmtSuffix();
@@ -225,7 +227,7 @@ public class SyntacticParser {
     /**
      * while-stmt ::= stmt-prefix stmt-list end
      */
-    void whileStmt() {
+    public void whileStmt() {
         stmtPreffix();
         stmtList();
         eat(TokenType.END);
@@ -234,7 +236,7 @@ public class SyntacticParser {
     /**
      * readStmt ::= in "<<" identifier
      */
-    void readStmt() {
+    public void readStmt() {
         eat(TokenType.IN);
         eat(TokenType.LEFT_ARROW);
         eat(TokenType.IDENTIFIER);
@@ -243,7 +245,7 @@ public class SyntacticParser {
     /**
      * writable ::= simple-expr | literal
      */
-    void writable() {
+    public void writable() {
         switch(tokens.get(index).type) {
             case NOT:
             case SUB:
@@ -263,7 +265,7 @@ public class SyntacticParser {
     /**
      * simple-expr ::= term simple-expr-esc
      */
-    void simpleExpr() {
+    public void simpleExpr() {
         term();
         simpleExprEsc();
     }
@@ -271,7 +273,7 @@ public class SyntacticParser {
     /**
      * simple-expr-esc ::= addop term simple-expr-esc | lambda
      */
-    void simpleExprEsc() {
+    public void simpleExprEsc() {
         switch(tokens.get(index).type) {
             case ADD:
             case SUB:
@@ -286,7 +288,7 @@ public class SyntacticParser {
     /**
      * factor-a ::= factor | ! factor | "-" factor
      */
-    void factorA() {
+    public void factorA() {
         if(tokens.get(index).type == TokenType.NOT) {
             eat(TokenType.NOT);
         } else if(tokens.get(index).type == TokenType.SUB) {
@@ -298,7 +300,7 @@ public class SyntacticParser {
     /**
      * relop ::= "==" | ">" | ">=" | "<" | "<=" | "!="
      */
-    void relop() {
+    public void relop() {
         switch(tokens.get(index).type) {
             case EQUAL:
                 eat(TokenType.EQUAL); break;
@@ -320,7 +322,7 @@ public class SyntacticParser {
     /**
      * mulop ::= "*" | "/" | &&
      */
-    void mulOp() {
+    public void mulOp() {
         switch(tokens.get(index).type) {
             case MUL:
                 eat(TokenType.MUL); break;
@@ -336,7 +338,7 @@ public class SyntacticParser {
     /**
      * stmt-suffix ::= until condition
      */
-    void stmtSuffix() {
+    public void stmtSuffix() {
         eat(TokenType.UNTIL);
         condition();
     }
@@ -344,7 +346,7 @@ public class SyntacticParser {
     /**
      * stmt-prefix ::= while condition do
      */
-    void stmtPreffix() {
+    public void stmtPreffix() {
         eat(TokenType.WHILE);
         condition();
         eat(TokenType.DO);
@@ -353,7 +355,7 @@ public class SyntacticParser {
     /**
      * write-stmt ::= out ">>" writable
      */
-    void writeStmt() {
+    public void writeStmt() {
         eat(TokenType.OUT);
         eat(TokenType.RIGHT_ARROW);
         writable();
@@ -362,7 +364,7 @@ public class SyntacticParser {
     /**
      * expression ::= simple-expr expression-pref
      */
-    void expression() {
+    public void expression() {
         simpleExpr();
         expressionPref();
     }
@@ -370,7 +372,7 @@ public class SyntacticParser {
     /**
      * expression-pref ::= relop simple-expr | λ
      */
-    void expressionPref() {
+    public void expressionPref() {
         switch(tokens.get(index).type) {
             case EQUAL:
             case GREATER:
@@ -387,7 +389,7 @@ public class SyntacticParser {
     /**
      * term ::= factor-a term-esc
      */
-    void term() {
+    public void term() {
         factorA();
         termEsc();
     }
@@ -395,7 +397,7 @@ public class SyntacticParser {
     /**
      * term-esc ::= mulop factor-a term-esc | λ
      */
-    void termEsc() {
+    public void termEsc() {
         switch(tokens.get(index).type) {
             case MUL:
             case DIV:
@@ -410,7 +412,7 @@ public class SyntacticParser {
     /**
      * factor ::= identifier | constant | "(" expression ")"
      */
-    void factor() {
+    public void factor() {
         switch(tokens.get(index).type) {
             case IDENTIFIER:
                 eat(TokenType.IDENTIFIER);
@@ -434,7 +436,7 @@ public class SyntacticParser {
     /**
      * addop ::= "+" | "-" | ||
      */
-    void addOp() {
+    public void addOp() {
         switch(tokens.get(index).type) {
             case ADD:
                 eat(TokenType.ADD);
@@ -454,7 +456,7 @@ public class SyntacticParser {
     /**
      * constant ::= integer_const | float_const | char_const
      */
-    void constant() {
+    public void constant() {
         switch(tokens.get(index).type) {
             case INTEGER_CONST:
                 eat(TokenType.INTEGER_CONST);
